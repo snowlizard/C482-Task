@@ -15,14 +15,14 @@
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <RadioButton id="inhouse" fx:id="inhouse" layoutX="158.0" layoutY="60.0" mnemonicParsing="false" text="In-house" />
-      <RadioButton id="outsourced" fx:id="outsourced" layoutX="286.0" layoutY="60.0" mnemonicParsing="false" text="Outsourced" />
-      <TextField id="partID" layoutX="158.0" layoutY="129.0" />
-      <TextField id="partName" layoutX="158.0" layoutY="160.0" />
-      <TextField id="partInv" layoutX="158.0" layoutY="188.0" />
-      <TextField id="partPrice" layoutX="158.0" layoutY="218.0" />
-      <TextField id="partMax" layoutX="158.0" layoutY="252.0" />
-      <TextField id="companyMachineField" layoutX="158.0" layoutY="284.0" />
+      <RadioButton fx:id="inhouse" layoutX="158.0" layoutY="60.0" mnemonicParsing="false" text="In-house"/>
+      <RadioButton fx:id="outsourced" layoutX="286.0" layoutY="60.0" mnemonicParsing="false" text="Outsourced" selected="true"/>
+      <TextField fx:id="partId" layoutX="158.0" layoutY="129.0" />
+      <TextField fx:id="partName" layoutX="158.0" layoutY="160.0" />
+      <TextField fx:id="partInv" layoutX="158.0" layoutY="188.0" />
+      <TextField fx:id="partPrice" layoutX="158.0" layoutY="218.0" />
+      <TextField fx:id="partMax" layoutX="158.0" layoutY="252.0" />
+      <TextField fx:id="companyMachineField" layoutX="158.0" layoutY="284.0" />
       <TextFlow layoutX="40.0" layoutY="130.0" lineSpacing="15.0" prefHeight="176.0" prefWidth="68.0">
          <children>
             <Label text="ID     " />
@@ -34,10 +34,10 @@
          </children>
       </TextFlow>
       <Label layoutX="343.0" layoutY="256.0" text="Min" />
-      <TextField layoutX="378.0" layoutY="252.0" />
+      <TextField fx:id="partMin" layoutX="378.0" layoutY="252.0" />
       <ButtonBar layoutX="343.0" layoutY="333.0" prefHeight="40.0" prefWidth="200.0">
         <buttons>
-          <Button mnemonicParsing="false" text="Save" />
+          <Button mnemonicParsing="false" text="Save" onAction="#onSave"/>
             <Button mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
         </buttons>
       </ButtonBar>
