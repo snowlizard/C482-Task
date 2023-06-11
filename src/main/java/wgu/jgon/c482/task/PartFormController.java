@@ -4,6 +4,7 @@
  */
 package wgu.jgon.c482.task;
 
+import javafx.scene.control.TextField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
@@ -21,15 +22,23 @@ import javafx.beans.value.*;
 /**
  * FXML Controller class
  *
- * @author mrjack
+ * @author Julian Gonzalez
  */
 public class PartFormController{
     private Stage stage = new Stage();
     private Scene scene;
     
+    @FXML private ToggleGroup group = new ToggleGroup();
     @FXML private RadioButton inhouse;
     @FXML private RadioButton outsourced;
     @FXML private Label machineCompany;
+    
+    @FXML private TextField partName;
+    @FXML private TextField partInv;
+    @FXML private TextField partPrice;
+    @FXML private TextField partMin;
+    @FXML private TextField partMax;
+    @FXML private TextField companyMachineField;
     
     public void init(String text) throws IOException{
         scene = new Scene(loadFXML("partForm"));
@@ -40,7 +49,6 @@ public class PartFormController{
         machineCompany = (Label) scene.lookup("#machineCompany");
         
         // create toggle group
-        ToggleGroup group = new ToggleGroup();
         inhouse = (RadioButton) scene.lookup("#inhouse");
         outsourced  = (RadioButton) scene.lookup("#outsourced");
         inhouse.setToggleGroup(group);
@@ -62,6 +70,30 @@ public class PartFormController{
         
         stage.setScene(scene);
         stage.showAndWait();
+    }
+    
+    @FXML
+    private void onSave(ActionEvent e){
+        Node source = (Node) e.getSource();
+        Stage win = (Stage) source.getScene().getWindow();
+        
+        Part part;
+        
+        String name = partName.getText();
+        double price = Double.parseDouble(partPrice.getText());
+        int stock = Integer.parseInt(partInv.getText());
+        int min = Integer.parseInt(partMin.getText());
+        int max = Integer.parseInt(partMax.getText());
+        
+        if(inhouse.isSelected()){
+            int machineId = Integer.parseInt(companyMachineField.getText());
+            part = new InHouse(53, name, price, stock, min, max,
+                        machineId);
+        } else {
+            String companyName = companyMachineField.getText();
+            part = new Outsourced(53, name, price, stock, min, max,
+                        companyName);
+        }
     }
     
     @FXML
