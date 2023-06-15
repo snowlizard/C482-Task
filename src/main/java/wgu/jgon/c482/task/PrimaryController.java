@@ -1,13 +1,17 @@
 package wgu.jgon.c482.task;
 
+import wgu.jgon.c482.task.Inventory;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,9 +20,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PrimaryController implements Initializable {
-    private Stage stage = new Stage();
-    private  Scene scene;
-    private Inventory inventroy = new Inventory();
+    @FXML private TextField searchParts;
     
     @FXML private TableView<Part> partsTable;
     @FXML private TableColumn<Part, Integer> partId;
@@ -27,15 +29,14 @@ public class PrimaryController implements Initializable {
     @FXML private TableColumn<Part, Double> partPrice;
     
     @Override
-    public void initialize(URL location, ResourceBundle resources){        
+    public void initialize(URL location, ResourceBundle resources){
         // initialize with parts
-        ObservableList<Part> testParts = FXCollections.observableArrayList();
-        Part p1 = new InHouse(1, "Gear", 1.99, 3, 1, 9, 940);
-        Part p2 = new Outsourced(2, "Sprocket", 2.49, 5, 2, 13, "Nissin");
-        testParts.add(p1);
-        testParts.add(p2);
+        Part p1 = new InHouse(0, "Gear", 1.99, 3, 1, 9, 940);
+        Part p2 = new Outsourced(1, "Sprocket", 2.49, 5, 2, 13, "Nissin");
+        Inventory.addPart(p1);
+        Inventory.addPart(p2);
         
-        partsTable.setItems(testParts);
+        partsTable.setItems(Inventory.getAllParts());
         partId.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partName.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partLvl.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
@@ -45,6 +46,21 @@ public class PrimaryController implements Initializable {
 
     }
     
+    @FXML // Search parts
+    private void onSearchPart() {
+        String query = searchParts.getText();
+        if(query.isEmpty()){
+            partsTable.setItems(Inventory.getAllParts());
+        } else{
+            if(query.matches("\\d+")){
+               ObservableList<Part> part = FXCollections.observableArrayList();
+               part.add(Inventory.lookupPart(Integer.parseInt(query)));
+               partsTable.setItems(part);
+            } else {
+                partsTable.setItems(Inventory.lookupPart(query));
+            }
+        }
+    }
     
     @FXML // exit the program
     private void exit(ActionEvent e) throws IOException {
@@ -56,13 +72,26 @@ public class PrimaryController implements Initializable {
     @FXML //open the add part window
     private void addPartWindow() throws IOException {
         PartFormController addParts = new PartFormController();
-        addParts.init("Add Part");
+        addParts.init("Add Part", null);
+    }
+    
+    @FXML
+    private void onDeletePart() {
+        Part part = partsTable.getSelectionModel().getSelectedItem();
+        if(part != null){
+            Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure "
+                    + "you want to delete this part?");
+            alert.showAndWait();
+            if(alert.getResult() == ButtonType.OK){
+                Inventory.deletePart(part);
+            }
+        }
     }
 
     @FXML //open the modify part window
     private void modifyPartWindow() throws IOException {
         PartFormController partForm = new PartFormController();
-        partForm.init("Modify Part");
+        partForm.init("Modify Part", partsTable.getSelectionModel().getSelectedItem());
     }    
     
     @FXML // open the add product window
